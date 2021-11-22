@@ -3,7 +3,7 @@ This repository contains the Spring Backend part of our project.
 
 IMPORTANT NOTE: data.sql file is missing from this project because my intelliJ version doesn't support sql files. So, everytime I run my app I wrote my data.sql content into the H2 console.
 
-But you can always add my data.sql content as an sql file in intelliJ:
+But we can always add data.sql content as an sql file in intelliJ (suitable version):
 
 INSERT INTO RROOM(id, name, floor, current_temperature, targeted_temperature) VALUES(-10, 'Room1', 1, 22.3, 20.0);
 
