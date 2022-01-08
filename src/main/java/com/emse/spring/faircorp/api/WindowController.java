@@ -2,16 +2,17 @@ package com.emse.spring.faircorp.api;
 
 import com.emse.spring.faircorp.dao.RoomDao;
 import com.emse.spring.faircorp.dao.WindowDao;
+import com.emse.spring.faircorp.dto.WindowDto;
 import com.emse.spring.faircorp.model.Room;
 import com.emse.spring.faircorp.model.Window;
 import com.emse.spring.faircorp.model.WindowStatus;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+@CrossOrigin
 @RestController
 @RequestMapping("/api/windows")
 @Transactional
@@ -35,6 +36,11 @@ public class WindowController {
         return windowDao.findById(id).map(WindowDto::new).orElse(null);
     }
 
+    @GetMapping(path = "/rooms/{roomId}")
+    public List<WindowDto> finWindowsByRoomId(@PathVariable Long roomId){
+        return windowDao.findWindowsByRoomId(roomId).stream().map(WindowDto::new).collect(Collectors.toList());
+    }
+
     @PutMapping(path = "/{id}/switch")
     public WindowDto switchStatus(@PathVariable Long id) {
         Window window = windowDao.findById(id).orElseThrow(IllegalArgumentException::new);
@@ -44,12 +50,11 @@ public class WindowController {
 
     @PostMapping
     public WindowDto create(@RequestBody WindowDto dto) {
-        // WindowDto must always contain the window room
+
         Room room = roomDao.getById(dto.getRoomId());
         Window window = null;
-        // On creation id is not defined
         if (dto.getId() == null) {
-            window = windowDao.save(new Window(dto.getName(), room, dto.getWindowStatus()));
+            window = windowDao.save(new Window(dto.getName(), dto.getWindowStatus(), room));
         }
         else {
             window = windowDao.getById(dto.getId());
@@ -57,7 +62,7 @@ public class WindowController {
         }
         return new WindowDto(window);
     }
-
+    
     @DeleteMapping(path = "/{id}")
     public void delete(@PathVariable Long id) {
         windowDao.deleteById(id);

@@ -1,13 +1,13 @@
 package com.emse.spring.faircorp.model;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 @Entity
-@Table(name = "RROOM")
+@Table(name = "room")
 public class Room {
 
+    @Column(nullable = false)
     @Id
     @GeneratedValue
     private Long id;
@@ -15,32 +15,108 @@ public class Room {
     @Column(nullable = false)
     private int floor;
 
-    @Column(nullable=false)
+    @Column(nullable = false, unique = true)
     private String name;
 
-    @Column(nullable = true)
-    private double currentTemperature;
-    @Column(nullable = true)
-    private double targetedTemperature;
+    @Column
+    private Double currentTemperature;
+
+    @Column
+    private Double targetTemperature;
 
     @OneToMany(mappedBy = "room")
-    List<Heater> heatersList = new ArrayList<Heater>();
+    private Set<Heater> heaters;
 
     @OneToMany(mappedBy = "room")
-    List<Window> windowsList = new ArrayList<Window>();
+    private Set<Window> windows;
 
-    public Room(){}
+    @ManyToOne
+    private Building building;
 
-    public Room(int floor, String name) {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Set<Heater> getHeaters() {
+        return heaters;
+    }
+
+    public void setHeaters(Set<Heater> heaters) {
+        this.heaters = heaters;
+    }
+
+    public Set<Window> getWindows() {
+        return windows;
+    }
+
+    public void setWindows(Set<Window> windows) {
+        this.windows = windows;
+    }
+
+    public int getFloor() {
+        return floor;
+    }
+
+    public void setFloor(int floor) {
         this.floor = floor;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
         this.name = name;
     }
 
-    public String getName(){
-        return this.name;
+    public Double getCurrentTemperature() {
+        return currentTemperature;
     }
 
-    public Long getId(){
-        return this.id;
+    public void setCurrentTemperature(Double currentTemperature) {
+        this.currentTemperature = currentTemperature;
+    }
+
+    public Double getTargetTemperature() {
+        return targetTemperature;
+    }
+
+    public void setTargetTemperature(Double targetTemperature) {
+        this.targetTemperature = targetTemperature;
+    }
+
+    public Building getBuilding() {
+        return building;
+    }
+
+    public void setBuilding(Building building) {
+        this.building = building;
+    }
+
+    public Room (){
+
+    }
+
+    public Room(int floor, String name, Double currentTemperature, Double targetTemperature) {
+        this.floor = floor;
+        this.name = name;
+        this.currentTemperature = currentTemperature;
+        this.targetTemperature = targetTemperature;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Room{" +
+                "id=" + id +
+                ", floor=" + floor +
+                ", name='" + name + '\'' +
+                ", currentTemperature=" + currentTemperature +
+                ", targetTemperature=" + targetTemperature +
+                '}';
     }
 }
